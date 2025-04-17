@@ -80,7 +80,7 @@
     <script>
         $("document").ready(function() {
             let scriptUrl =
-                "https://script.google.com/macros/s/AKfycbxndQqts44fnZvpVC75bTUl_Lg4XpTyi8EZS_NQsH1FL-gghVfjz_Cq8jJKIYhCj2BqqQ/exec";
+                "https://script.google.com/macros/s/AKfycby7_uktOkDxSWEvfr8SYo9oWgIHeJLE_1fosRg6qLFC_Esf97sjZhUtJZgK39QyiOPm/exec";
             let bookingForm = document.forms["bookinghotelform"];
             bookingForm.addEventListener("submit", function(event) {
                 event.preventDefault();
@@ -144,6 +144,7 @@
                         if (response.status === "success") {
                             alert("Form submitted successfully!");
                             $("#bookinghotelform")[0].reset();
+                            window.location.href = "https://be.aiosell.com/book/d6ba78d8bd";
                         } else {
                             alert("Mailer Error: " + response.message);
                         }

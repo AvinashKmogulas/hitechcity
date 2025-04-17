@@ -3,12 +3,8 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-require 'PHPMailer/src/Exception.php';
-require 'PHPMailer/src/PHPMailer.php';
-require 'PHPMailer/src/SMTP.php';
+// Server settings
+require('phpmailer/PHPMailerAutoload.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $flag = $_POST['flag'] ?? '';
@@ -22,27 +18,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $children = $_POST['children'] ?? '';
     }
 
-    $mail = new PHPMailer(true);
-
     try {
-        // Server settings
-        $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com';
-        $mail->SMTPAuth   = true;
-        $mail->Username   = 'avinash.mogulas@gmail.com';
-        $mail->Password   = 'npjvobfhyaryrrpg';
-        $mail->SMTPSecure = 'tls';
-        $mail->Port       = 587;
+
+        $mail = new PHPMailer(); // create a new object
+        //$mail->IsSMTP(); // enable SMTP
+        $mail->SMTPDebug = 2; // debugging: 1 = errors and messages, 2 = messages only
+        //$mail->SMTPAuth = true; // authentication enabled
+        //$mail->SMTPSecure = 'tls'; // secure transfer enabled REQUIRED for Gmail
+        $mail->Host = "localhost";
+        $mail->Port = 25;
+        $mail->IsHTML(true);
 
         // Sender & Receiver
 
         switch ($flag) {
             case 'bookingForm':
-                $toEmail = 'avinash8564kumar@gmail.com';
-                $toName = 'Admin';
-                $fromEmail = 'avinash.mogulas@gmail.com';
-                $fromName = 'Booking Enquiry in Hitech City';
-                $subject = 'New Booking Enquiry';
+                $toEmail = 'seraikitchens@deccanserai.com, notification@internetmoguls.com, ishaan@internetmoguls.com, avinash.k@internetmoguls.com';
+                $fromEmail = 'operationsdsg@deccanserai.com';
+                $fromName = 'Booking From Hitechcity';
+                $subject = 'New Booking';
                 $fields = [
                     'Name' => $name,
                     'Phone' => $phone,
@@ -59,7 +53,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         $mail->setFrom($fromEmail, $fromName);
-        $mail->addAddress($toEmail, $toName);
+
+        // Convert to array if needed
+        $toEmails = is_array($toEmail) ? $toEmail : explode(',', $toEmail);
+
+        // Loop and add all addresses
+        foreach ($toEmails as $email) {
+            $mail->addAddress(trim($email));
+        }   
 
         // Email Content
         $mail->isHTML(true);
